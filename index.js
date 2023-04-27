@@ -85,7 +85,6 @@ client.on("message", async (message) => {
 
       let embed = new Embed();
       embed.color = config.color;
-      embed.title = `Previous names of ${user.tag}`;
 
       if (!Array.isArray(usernames)) {
         embed.description = `${usernames.substring(0, usernames.indexOf("/"))} \`-\` <t:${usernames.substring(usernames.indexOf("/") + 1)}:f>\n`
