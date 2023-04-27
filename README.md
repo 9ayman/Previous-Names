@@ -2,6 +2,16 @@
 
 This is a simple Discord bot that tracks the previous usernames of users in your server. Whenever a user changes their nickname, the bot will automatically save their previous nickname along with the timestamp of the change. You can then use a command to retrieve the list of previous nicknames for a particular user.
 
+## Features
+
+- Tracks the previous usernames of users in a Discord server
+- Saves the old usernames in a database (QuickDB)
+- Displays the old usernames in a paginated embed when requested by a user
+- Provides a button interface to navigate between pages of old usernames
+- Can clear old usernames for a user
+- Configurable with a JSON file (config.json)
+- Built using Node.js and the devland.js and QuickDB libraries
+
 ## Installation
 
 1. Clone or download this repository.
