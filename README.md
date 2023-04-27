@@ -1,4 +1,4 @@
-# Discord Nickname Tracker Bot
+# Discord Prev Names Bot
 
 This is a simple Discord bot that tracks the previous usernames of users in your server. Whenever a user changes their nickname, the bot will automatically save their previous nickname along with the timestamp of the change. You can then use a command to retrieve the list of previous nicknames for a particular user.
 
@@ -25,6 +25,12 @@ This is a simple Discord bot that tracks the previous usernames of users in your
 
 If you find a bug or would like to suggest a new feature, feel free to open an issue or submit a pull request.
 
-## License
+## Support
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+If you have any questions or issues, please don't hesitate to contact us. We offer the following support options:
+
+- **Discord Server:** For fast support, we recommend joining our Discord server at https://discord.gg/USYde8THV6. Our team is active on Discord and can provide quick assistance with any problems you may encounter.
+
+- **GitHub Issues:** If you encounter any bugs or issues with our project, please feel free to create a new issue on our GitHub repository. Our development team will investigate the issue and provide a fix as soon as possible.
+
+Thanks for reading 💖.
