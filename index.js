@@ -1,7 +1,9 @@
 const config = require("./config.json");
 const {
   Client,
-  Embed
+  Embed,
+  ActionRow,
+  Button
 } = require("devland.js");
 const {
   QuickDB
@@ -26,6 +28,9 @@ const templateEmbed = new Embed();
 templateEmbed.color = config.color;
 
 client.on("ready", async () => {
+
+  console.log(await db.get(`prevname_382936822860218370`))
+
   console.log("Logged in as " + client.user.tag);
   console.log("Made by Hawk");
 });
@@ -74,15 +79,109 @@ client.on("message", async (message) => {
           embeds: [templateEmbed]
         }).catch(err => console.log(err));
       }
+      let pages = [];
+      let page = "";
+      let pageCounter = 0;
+
       let embed = new Embed();
       embed.color = config.color;
+      embed.title = `Previous names of ${user.tag}`;
+
+      if (!Array.isArray(usernames)) {
+        embed.description = `${usernames.substring(0, usernames.indexOf("/"))} \`-\` <t:${usernames.substring(usernames.indexOf("/") + 1)}:f>\n`
+        return message.reply({
+          embeds: [embed]
+        }).catch(err => {});
+      }
+
+      for (let i = 0; i < usernames.length; i++) {
+        let username = usernames[i];
+        let formattedName = `${username.substring(0, username.indexOf("/"))} \`-\` <t:${username.substring(username.indexOf("/") + 1)}:f>\n`;
+
+        if (page.length + formattedName.length > 1024) {
+          pages.push(page);
+          page = "";
+        }
+
+        page += formattedName;
+      }
+
+      pages.push(page);
+
+      let right = new Button()
+      right.emoji = "➡️"
+      right.customId = "right"
+      right.style = 2
+      right.disabled = usernames.length <= 10
+
+      let left = new Button()
+      left.emoji = "⬅️"
+      left.customId = "left"
+      left.style = 2
+      left.disabled = true
+
+      let buttons = new ActionRow(left, right)
+
       embed.fields.push({
         name: `Previous names of ${user.username}`,
-        value: usernames.map(u => (u.substring(0, u.indexOf("/")) + " `-` <t:" + u.substring(u.indexOf("/") + 1) + ":f>\n")).join("")
+        value: pages[pageCounter]
       });
-      message.reply({
-        embeds: [embed]
-      }).catch(err => console.log(err));
+      embed.timestamp = Date.now();
+      embed.footer = {
+        text: `Page ${pageCounter + 1}/${pages.length}`
+      }
+
+      let msg = await message.reply({
+        embeds: [embed],
+        components: [buttons]
+      });
+
+      let collector = msg.createComponentsCollector()
+
+      collector.on("collected", async (i) => {
+
+        templateEmbed.description = "`❌` Those buttons aren't for you.";
+        if (i.user.id != message.author.id) return i.reply({
+          embeds: [templateEmbed]
+        }).catch(err => {});
+
+        if (i.customId === "right") {
+          pageCounter++;
+          if (pageCounter >= pages.length - 1) {
+            right.disabled = true;
+            left.disabled = false;
+          }
+          else {
+            left.disabled = false;
+            right.disabled = false;
+          }
+        }
+        else if (i.customId === "left") {
+          pageCounter--;
+          if (pageCounter == 0) {
+            left.disabled = true;
+            right.disabled = false;
+          }
+          else {
+            right.disabled = false;
+            left.disabled = false;
+          }
+        }
+
+        let newButtons = new ActionRow(left, right)
+
+        embed.footer = {
+          text: `Page ${pageCounter + 1}/${pages.length}`
+        }
+        embed.timestamp = Date.now();
+        embed.fields[0].value = pages[pageCounter];
+        i.deferUpdate()
+        await msg.edit({
+          embeds: [embed],
+          components: [newButtons],
+        });
+
+      })
     }
   }
 });
